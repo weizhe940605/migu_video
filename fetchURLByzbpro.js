@@ -6,6 +6,14 @@ import { dataList } from "./utils/fetchList.js"
 import updateChannels from "./utils/zbpro.js"
 
 const start = new Date()
+const datas = await dataList()
+const channelImage = {}
+
+for (const data of datas) {
+  for (const dataList of data?.dataList) {
+    channelImage[dataList.name] = dataList.pics.highResolutionH
+  }
+}
 printMagenta("开始更新...")
 
 
@@ -13,7 +21,7 @@ printMagenta("开始更新接口文件...")
 let updateResult = 2
 for (let i = 0; i < 3; i++) {
   try {
-    updateResult = await updateChannels()
+    updateResult = await updateChannels(channelImage)
     break
   } catch (error) {
     printRed("接口更新出现问题，正在重试...")
@@ -36,7 +44,6 @@ switch (updateResult) {
 // 6小时更新节目单
 if (!(start.getHours() % 6)) {
   // 获取数据
-  const datas = await dataList()
   printGreen("数据获取成功！")
 
   try {

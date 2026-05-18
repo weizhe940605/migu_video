@@ -37,7 +37,7 @@ function isInWhiteList(whiteList, item) {
   return false
 }
 
-async function getAllURL() {
+async function getAllURL(channelImage) {
   const channelsURLM3U = []
   const channelsURLTXT = []
   const domains = {}
@@ -138,7 +138,7 @@ async function getAllURL() {
           channelsURLTXT.push(`${channel?.province},#genre#`)
           lastChannelCate = channel?.province
         }
-        const channelURLM3U = `#EXTINF:-1 tvg-id="${channel?.title}" tvg-name="${channel?.title}" tvg-logo="" group-title="${channel?.province}",${channel.title}\n${decryptURL}`
+        const channelURLM3U = `#EXTINF:-1 tvg-id="${channel?.title}" tvg-name="${channel?.title}" tvg-logo="${channelImage[channel?.title] || ""}" group-title="${channel?.province}",${channel.title}\n${decryptURL}`
         const channelURLTXT = `${channel?.title},${decryptURL}`
         if (sumChannel == 0) {
           // 更新时间
@@ -178,10 +178,10 @@ async function getAllURL() {
   }
 }
 
-async function updateChannels() {
+async function updateChannels(channelImage) {
   const m3uFilePath = `${process.cwd()}/interface.txt`
   const txtFilePath = `${process.cwd()}/interfaceTXT.txt`
-  const allURL = await getAllURL()
+  const allURL = await getAllURL(channelImage)
   if (allURL > 0) {
     return allURL
   }
