@@ -78,7 +78,7 @@ const server = http.createServer(async (req, res) => {
     return
   }
 
-  const interfaceList = "/,/interface.txt,/m3u,/txt,/playback.xml"
+  const interfaceList = "/,/interface.txt,/m3u,/txt,/playback.xml,/main.m3u"
 
   // 接口
   if (interfaceList.indexOf(url) !== -1) {

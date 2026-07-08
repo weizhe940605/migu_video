@@ -1,6 +1,8 @@
 import { customMergeCategory, mergeTVCategory } from "../config.js"
 import { fetchUrl } from "./net.js"
 
+const isMergeEnabled = mergeTVCategory !== false && mergeTVCategory !== "false";
+
 function delay(ms) {
   return new Promise(resolve => {
     setTimeout(resolve, ms)
@@ -31,7 +33,7 @@ function mergeCategory(cates) {
     fitArea: ['10000'],
     dataList: []
   }
-  if (mergeTVCategory !== "false") {
+  if (isMergeEnabled) {
 
     for (const cate of cates) {
       if (cate.dataList.length <= 11) {
@@ -92,6 +94,7 @@ function mergeCategory(cates) {
 // 获取分类集合
 async function cateList() {
   const resp = await fetchUrl("https://program-sc.miguvideo.com/live/v2/tv-data/1ff892f2b5ab4a79be6e25b69d2f5d05")
+  if (!resp || !resp.body) return []
   let liveList = resp.body.liveList
   // 热门内容重复
   liveList = liveList.filter(item => {
@@ -115,7 +118,7 @@ async function dataList() {
   for (let cate in cates) {
     try {
       const resp = await fetchUrl("https://program-sc.miguvideo.com/live/v2/tv-data/" + cates[cate].vomsID)
-      cates[cate].dataList = resp.body.dataList
+      cates[cate].dataList = resp && resp.body ? resp.body.dataList : []
     } catch (error) {
       cates[cate].dataList = [];
     }
@@ -124,7 +127,7 @@ async function dataList() {
   // 去除重复节目
   cates = uniqueData(cates)
   // 合并分类
-  if (!mergeTVCategory !== "false") {
+  if (isMergeEnabled) {
     cates = mergeCategory(cates)
   }
   // console.dir(cates, { depth: null })

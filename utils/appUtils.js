@@ -27,6 +27,10 @@ function interfaceStr(url, headers, urlUserId, urlToken) {
       result.contentType = "audio/x-mpegurl; charset=utf-8"
       break;
 
+    case "/main.m3u":
+      result.contentType = "application/octet-stream; charset=utf-8"
+      break;
+
     default:
       break;
   }

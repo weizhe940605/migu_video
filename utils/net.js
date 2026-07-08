@@ -29,21 +29,18 @@ async function fetchUrl(url, opts = {}, timeout = 6000) {
     controller.abort()
     printRed("请求超时")
   }, timeout);
-  // opts["signal"] = controller.signal
-  const res = await fetch(url, {
-    ...opts,
-    signal: controller.signal
-  })
-    .then(r => {
-      clearTimeout(timeoutId);
-      return r.json()
-    })
-    .catch(err => {
-      console.log(err)
-      clearTimeout(timeoutId);
-    })
-
-  return res
+  try {
+    const res = await fetch(url, {
+      ...opts,
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    return await res.json();
+  } catch (err) {
+    console.error("请求失败:", err);
+    clearTimeout(timeoutId);
+    return null;
+  }
 }
 
 export {
